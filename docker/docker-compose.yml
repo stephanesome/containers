@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  mysql:
+     image: mysql:8
+     volumes: 
+       - mysql-data:/var/lib/mysql 
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: booksDb
+     networks:
+       - mysql-network
+     healthcheck:
+       test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+       interval: 30s
+       timeout: 10s
+       retries: 10
+     ports:
+       - 3306:3306
+       
+  booksserver:
+     build:
+       context: ../books-rest-api
+       dockerfile: Dockerfile
+     image: books-rest-api:latest
+     environment:
+       MYSQL_USER: root
+       MYSQL_PASSWORD: root
+       MYSQL_DB: booksDb
+       MYSQL_HOST: mysql
+     networks:
+       - mysql-network
+     ports:
+       - 8080:8080
+     depends_on:
+       mysql:
+         condition: service_healthy
+     
+  booksapp:
+     build:
+       context: ../bookstore-client
+       dockerfile: Dockerfile
+     image: books-api-client:latest
+     environment:
+        API_URL: 'http://localhost:8080/books-api/'
+        AUTH_URL: 'http://localhost:8080/auth/'
+     ports:
+       - 4100:80
+     depends_on:
+       - mysql
+       - booksserver
+       
+networks:
+  mysql-network: 
+  
+volumes:
+  mysql-data:
+  
