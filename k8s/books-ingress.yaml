@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: books-ingress
+spec:
+  defaultBackend:
+    service:
+      name: booksserver
+      port:
+        number: 8080

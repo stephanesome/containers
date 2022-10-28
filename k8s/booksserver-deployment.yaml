@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: booksserver
+  labels:
+    app: booksserver
+spec:
+  type: ClusterIP
+  selector:
+    app: booksserver
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booksserver
+  labels:
+    app: booksserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booksserver
+  template:
+    metadata:
+      labels:
+        app: booksserver
+    spec:
+      containers:
+        - name: booksserver
+          image: books-rest-api:latest
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ]
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_DB
+              value: booksDb
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_PASSWORD
+              value: root
+            - name: MYSQL_USER
+              value: root

@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="alert alert-danger" role="alert" *ngIf="message">
+    {{ message }}
+  </div>
+  <form [formGroup]="signupForm" (ngSubmit)="register()">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username"  formControlName="username">
+      <div [hidden]="username.pristine || username.valid"
+           class="alert alert-danger">
+        Username is required.
+      </div>
+    </div>
+    <div formGroupName="pwGroup">
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" required
+               formControlName="password">
+        <div [hidden]="password.pristine || password.valid"
+             class="alert alert-danger">
+          A Password is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pwconfirm">Confirm Password:</label>
+        <input type="password" class="form-control" id="pwconfirm" required
+               formControlName="confirmPassword">
+        <div [hidden]="confirmPassword.pristine || confirmPassword.valid"
+             class="alert alert-danger">
+          A Confirmation Password is required.
+        </div>
+      </div>
+      <div [hidden]="(password.pristine || confirmPassword.pristine) || pwGroup.valid"
+           class="alert alert-danger">
+        The passwords do not match.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success" [disabled]="signupForm.invalid">Register</button>
+  </form>
+</div>
