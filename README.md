@@ -6,11 +6,11 @@
 
 ### Build and run 
 
-`docker-compose up -d --build`
+`docker compose up -d --build`
 
 ### Shutdown and clean
 
-`docker-compose down`
+`docker compose down`
 
 ## Kubernetes
 We use the local cluster management system minikube (https://minikube.sigs.k8s.io/docs/)
