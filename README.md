@@ -8,6 +8,10 @@
 
 `docker compose up -d --build`
 
+### Access application
+
+http://localhost:4100
+
 ### Shutdown and clean
 
 `docker compose down`
